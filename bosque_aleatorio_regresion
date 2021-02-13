@@ -1,0 +1,59 @@
+#BOSQUE ALEATORIOS REGRESIÓN PARA UNA VARIABLE
+#Preparar los datos para Bosques Aleatorios Regresión
+# El código para analizar los datos está en otros trabajos creados en Jupyter Notebook
+#Importar la librería que se uasarán
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import datasets
+import pandas as pd
+#Importar los datos de la librería de scikitlearn
+boston=datasets.load_boston()
+print(boston)
+print()
+#Entender los datos
+print('Verificar los datos del dataset')
+print(boston.keys())
+print()
+#Verificar las características del dataset
+print('Características de los datos')
+print(boston.DESCR)
+#Verificar la cantidad de datos del dataset
+print('Cantidad de catos contenidos en el dataset')
+print(boston.data.shape)
+print()
+#Verificar las columnas del dataset
+print('Nombre de las columnas: ')
+print(boston.feature_names)
+#Seleccionamos solamente la columna 6 del dataset (RM)
+X_bar=boston.data[:,np.newaxis, 5]
+#Seleccionamos la variable y
+y_bar=boston.target
+#Graficamos las dos variables
+plt.scatter(X_bar,y_bar)
+plt.xlabel('Número de habitaciones/Promedio')
+plt.ylabel('Valor de las casas/Promedio')
+plt.title('VALOR DE LAS CASAS Y NUMERO DE HABITACIONES/PROMEDIO')
+plt.show()
+#IMPLEMENTAR EL MODELO DE BOSQUES ALEATORIOS REGRESIÓN
+from sklearn.model_selection import train_test_split
+#Separar los datos de entrenamiento de los de prueba
+X_train, X_test, y_train, y_test = train_test_split(X_bar, y_bar, test_size=0.2)
+#IMPORTA LA LIBRERÍA QUE CONTIEN EL ALGOTIRMO
+from sklearn.ensemble import RandomForestRegressor
+#Definimos el algoritmo
+bar=RandomForestRegressor(n_estimators=300, max_depth=8)
+#Entrenar el modelo  de Bosques
+bar.fit(X_train, y_train)
+#Realizar una predicción
+Y_pred=bar.predict(X_test)
+#GRAFICAS LOS DATOS DE PRUEBA JUNTO CON LA PREDICCIÓN
+X_grid=np.arange(min(X_test), max(X_test),0.1)
+X_grid=X_grid.reshape((len(X_grid),1))
+plt.scatter(X_test, y_test)
+plt.plot(X_grid, bar.predict(X_grid), color='green', linewidth=2)
+plt.show()
+
+#DATOS DEL MODELO DE REGRESIÓN
+print('Datos del modelo de regresión')
+print('Presión del modelo: ')
+print(bar.score(X_train, y_train))
